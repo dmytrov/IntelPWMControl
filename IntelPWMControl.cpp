@@ -36,12 +36,19 @@ int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
     UINT uiInverterType = 0;
     DWORD dwPWMFreq = 0,
           dwErrorCodes = 0;
-    assert(SUCCEEDED(pCUIPower->GetPWMFrequency(&uiInverterType, &dwPWMFreq, &dwErrorCodes)));
-    if (dwPWMFreq != targetPWMFreq)
-    {
-      dwPWMFreq = targetPWMFreq;
-      assert(SUCCEEDED(pCUIPower->SetPWMFrequency(uiInverterType, dwPWMFreq, &dwErrorCodes)));
-    }
+	try
+	{
+		pCUIPower->GetPWMFrequency(&uiInverterType, &dwPWMFreq, &dwErrorCodes);
+		if (dwPWMFreq != targetPWMFreq)
+		{
+			dwPWMFreq = targetPWMFreq;
+			pCUIPower->SetPWMFrequency(uiInverterType, dwPWMFreq, &dwErrorCodes);
+		}
+	}
+	catch (...)
+	{
+		// Nothing here
+	}
     Sleep(1000);
   }
   pCUIPower->Release();
